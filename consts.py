@@ -41,6 +41,11 @@ gameConsts = {
             "First free throw for {}. It's not good.",
             "{} shoots the second one. No good.",
         ],
+        "assist": [
+            "{} got the assist.",
+            "It's assisted by {}.",
+            "One more assist for {}.",
+        ],
     },
 }
 

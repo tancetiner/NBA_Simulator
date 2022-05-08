@@ -3,7 +3,7 @@ from Season import Season
 
 season = Season(teamNameList, teamDetail)
 season.simulateSeason()
-season.printLog()
+season.printGameScores()
 print()
 season.printStandings()
 print()

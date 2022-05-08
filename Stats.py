@@ -13,14 +13,24 @@ class Stats:
             roster = rosters[i]
             self.stats.append({})
             for n in range(len(rosters[i])):
-                stats[i][roster[n]] = 0
+                stats[i][roster[n]] = {"points": 0, "assists": 0}
 
     def scores(self, team, name, points):
-        self.stats[team][name] += points
+        self.stats[team][name]["points"] += points
+
+    def assists(self, team, name):
+        self.stats[team][name]["assists"] += 1
 
     def printStats(self):
         print("Box Score:")
         for i in range(2):
             print("\t" + self.initials[i])
             for key in self.stats[i].keys():
-                print("\t" + key + ": " + str(self.stats[i][key]))
+                print(
+                    "\t"
+                    + key
+                    + ": "
+                    + str(self.stats[i][key]["points"])
+                    + " "
+                    + str(self.stats[i][key]["assists"])
+                )

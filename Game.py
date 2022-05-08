@@ -21,6 +21,11 @@ class Game:
         pos = rd.randint(1, 110)
         player = rd.randint(0, 4)
         name = self.rosters[i % 2][player]
+        assisted = rd.randint(1, 100) <= 24
+        if assisted:
+            assistName = self.rosters[i % 2][player]
+            while assistName == name:
+                assistName = self.rosters[i % 2][rd.randint(0, 4)]
         if 1 <= pos < 8:
             player2 = rd.randint(0, 4)
             name2 = self.rosters[(i + 1) % 2][player2]
@@ -38,15 +43,21 @@ class Game:
         elif pos == 14:
             self.log += self.actionStrings["shotClockViolation"][
                 rd.randint(0, 1)
-            ].format(name)
+            ].format(self.initials[(i + 1) % 2])
         elif 15 <= pos < 37:
             self.score[i % 2] += 2
             self.log += (
                 self.actionStrings["layupMade"][rd.randint(0, 1)].format(name)
                 + " "
                 + self.scoreString()
+                + " "
             )
             self.stats.scores(i % 2, name, 2)
+            if assisted:
+                self.stats.assists(i % 2, assistName)
+                self.log += self.actionStrings["assist"][rd.randint(0, 2)].format(
+                    assistName
+                )
         elif 37 <= pos < 49:
             self.log += self.actionStrings["layupMissed"][rd.randint(0, 1)].format(name)
         elif 49 <= pos < 55:
@@ -55,8 +66,14 @@ class Game:
                 self.actionStrings["midrangeMade"][rd.randint(0, 1)].format(name)
                 + " "
                 + self.scoreString()
+                + " "
             )
             self.stats.scores(i % 2, name, 2)
+            if assisted:
+                self.stats.assists(i % 2, assistName)
+                self.log += self.actionStrings["assist"][rd.randint(0, 2)].format(
+                    assistName
+                )
         elif 55 <= pos < 63:
             self.log += self.actionStrings["midrangeMissed"][rd.randint(0, 1)].format(
                 name
@@ -67,8 +84,14 @@ class Game:
                 self.actionStrings["3made"][rd.randint(0, 1)].format(name)
                 + " "
                 + self.scoreString()
+                + " "
             )
             self.stats.scores(i % 2, name, 3)
+            if assisted:
+                self.stats.assists(i % 2, assistName)
+                self.log += self.actionStrings["assist"][rd.randint(0, 2)].format(
+                    assistName
+                )
         elif 75 <= pos < 96:
             self.log += self.actionStrings["3missed"][rd.randint(0, 1)].format(name)
         elif 96 <= pos < 101:
@@ -102,7 +125,10 @@ class Game:
         self.log += "\n"
 
         if i % 50 == 0 and i != 0:
-            self.log += "\nEnd of the {}. quarter".format(int(i / 50)) + "\n"
+            self.log += "End of the {}. quarter".format(int(i / 50)) + "\n\n"
+
+            if i != 200:
+                self.log += "{}. quarter takes off!\n".format(int(i / 50) + 1)
 
     def play(self):
         for i in range(self.possessionCount):

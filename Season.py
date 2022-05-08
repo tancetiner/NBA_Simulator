@@ -69,7 +69,13 @@ class Season:
         seasonStats = {}
         for roster in rosters:
             for player in roster:
-                seasonStats[player] = {"totalPoints": 0, "gamesPlayed": 0, "ppg": 0.0}
+                seasonStats[player] = {
+                    "totalPoints": 0,
+                    "gamesPlayed": 0,
+                    "ppg": 0.0,
+                    "totalAssists": 0,
+                    "apg": 0.0,
+                }
 
         self.seasonStats = seasonStats
 
@@ -128,9 +134,11 @@ class Season:
         for i in range(2):
             for player in stats[i].keys():
                 stat = self.seasonStats[player]
-                stat["totalPoints"] += stats[i][player]
+                stat["totalPoints"] += stats[i][player]["points"]
                 stat["gamesPlayed"] += 1
                 stat["ppg"] = float(stat["totalPoints"]) / stat["gamesPlayed"]
+                stat["totalAssists"] += stats[i][player]["assists"]
+                stat["apg"] = float(stat["totalAssists"]) / stat["gamesPlayed"]
 
     def printStandings(self):
         i = 1
@@ -152,12 +160,11 @@ class Season:
     def printSchedule(self):
         print(self.schedule)
 
-    def printLog(self):
+    def printGameScores(self):
         for score in self.scoreLog:
             print(score)
 
     def printSeasonStats(self):
-        # ppg uzerinden sort etmemiz lazim ama daha beceremedim buradan devam edelim
         sortedList = sorted(
             self.seasonStats.items(),
             key=lambda k_v: float(k_v[1]["ppg"]),
@@ -165,5 +172,13 @@ class Season:
         )
         idx = 1
         for k, v in sortedList:
-            print(str(idx) + ". " + k + ":" + "\t" + "{:.1f}".format(v["ppg"]))
+            print(
+                str(idx)
+                + ". "
+                + k
+                + ":"
+                + "\t"
+                + "{:.1f}P".format(v["ppg"])
+                + "\t{:.1f}A".format(v["apg"])
+            )
             idx += 1
